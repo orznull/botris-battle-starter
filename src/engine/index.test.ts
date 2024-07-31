@@ -65,9 +65,9 @@ describe('game', () => {
         let gameState = createGameState();
         const garbageIndices = generateGarbage(4);
         gameState = queueGarbage(gameState, garbageIndices);
-        expect(gameState.board[0]?.some(block => block === "G") ?? false).toBe(false);
+        expect(gameState.board[0]?.some((block: Block) => block === "G") ?? false).toBe(false);
         gameState = hardDrop(gameState).gameState;
-        expect(gameState.board[0]?.some(block => block === "G")).toBe(true);
-        expect(gameState.board[3]?.some(block => block === "G")).toBe(true);
+        expect(gameState.board[0]?.some((block: Block) => block === "G")).toBe(true);
+        expect(gameState.board[3]?.some((block: Block) => block === "G")).toBe(true);
     })
 })

@@ -17,6 +17,7 @@
     }
   },
   "scripts": {
+    "dev": "tsx src/index.ts",
     "build": "tsup",
     "release": "yarn build && yarn publish",
     "lint": "tsc",
@@ -46,6 +47,10 @@
     "vitest": "^0.34.6"
   },
   "dependencies": {
-    "shuffle-array": "^1.0.1"
+    "@types/ws": "^8.5.12",
+    "dotenv": "^16.4.5",
+    "shuffle-array": "^1.0.1",
+    "tsx": "^4.16.3",
+    "ws": "^8.18.0"
   }
 }

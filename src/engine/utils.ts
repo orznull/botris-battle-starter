@@ -1,6 +1,6 @@
 import shuffle from "shuffle-array";
-import type { Options } from "./index";
-import { DEFAULT_OPTIONS } from "./index";
+import type { Options } from ".";
+import { DEFAULT_OPTIONS } from ".";
 
 export type Piece = 'I' | 'O' | 'J' | 'L' | 'S' | 'Z' | 'T';
 export type Block = Piece | null | 'G';
