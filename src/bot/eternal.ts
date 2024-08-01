@@ -5,7 +5,7 @@ import { ActionEvent, RequestMoveEvent, ServerEvent } from "../ws/types";
 import WebSocket from "ws";
 import { getPossibleMoves, PossibleMove, publicGameStateToGameState } from "./utils";
 import { Block, getBoardBumpiness, getBoardHeights } from "../engine/utils";
-import { GameState } from "../engine";
+import { GameEvent, GameState } from "../engine";
 
 // ----- this is the main bulk of bot code, make edits here -----
 export const onRequestMove = (event: RequestMoveEvent): ActionEvent => {
@@ -28,8 +28,22 @@ export const onRequestMove = (event: RequestMoveEvent): ActionEvent => {
   };
 }
 
-const maxHeight = (gameState: GameState) => getBoardHeights(gameState.board).reduce((a, b) => Math.max(a, b), 0);
 
+function countColumnHoles(board: Block[][]) {
+  if (board.length === 0) return new Array(options.boardWidth).fill(0);
+
+  const heights = [];
+  for (let x = 0; x < (board[0].length ?? 0); x++) {
+    let y = board.length - 1;
+    let lastSeen = 0;
+    while (y >= 0) {
+      y--;
+    }
+    heights.push(y + 1);
+  }
+
+  return heights;
+}
 
 function countHoles(board: Block[][]): number {
   const boardCopy = board.map(row => row.slice());

@@ -140,7 +140,7 @@ export type ActionEvent = {
   }
 }
 
-export type Command = 'move_left' | 'move_right' | 'rotate_cw' | 'rotate_ccw' | 'drop' | 'sonic_drop';
+export type Command = 'move_left' | 'move_right' | 'rotate_cw' | 'rotate_ccw' | 'drop' | 'sonic_drop' | 'hold';
 
 export type PublicGameState = {
   board: Block[][];

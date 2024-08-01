@@ -1,15 +1,23 @@
 /* sample bot file, kills itself as fast as possible */
 import { initializeSocket } from "../ws/initializeSocket";
 import "dotenv/config";
-import { ActionEvent, RequestMoveEvent, ServerEvent } from "../ws/types";
+import { ActionEvent, Command, RequestMoveEvent, ServerEvent } from "../ws/types";
 import WebSocket from "ws";
 import { getPossibleMoves, PossibleMove, publicGameStateToGameState } from "./utils";
 import { getBoardHeights } from "../engine/utils";
-import { GameState } from "../engine";
+import { executeCommand, GameState } from "../engine";
 
 // ----- this is the main bulk of bot code, make edits here -----
 export const onRequestMove = (event: RequestMoveEvent): ActionEvent => {
-  const moves = getPossibleMoves(publicGameStateToGameState(event.payload.gameState));
+
+  const state = publicGameStateToGameState(event.payload.gameState);
+  const stateWithHold = executeCommand(state, "hold").gameState
+
+  let moves = [
+    ...getPossibleMoves(state),
+    ...getPossibleMoves(stateWithHold).map(e => ({ ...e, commands: ["hold", ...e.commands] satisfies Command[] }))
+  ];
+
   const bestMove = moves.reduce<PossibleMove | undefined>((best, current) => {
     if (!best) return current;
     const currHeight = maxHeight(current.gameState);
