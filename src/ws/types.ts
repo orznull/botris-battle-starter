@@ -13,7 +13,7 @@ export type RoundStartedEvent = {
 export type RequestMoveEvent = {
   type: "request_move";
   payload: {
-    gameState: GameState;
+    gameState: PublicGameState;
     players: PlayerData[];
   };
 }
@@ -142,7 +142,7 @@ export type ActionEvent = {
 
 export type Command = 'move_left' | 'move_right' | 'rotate_cw' | 'rotate_ccw' | 'drop' | 'sonic_drop';
 
-export type GameState = {
+export type PublicGameState = {
   board: Block[][];
   queue: Piece[];
   garbageQueued: number;
@@ -179,7 +179,7 @@ export type PlayerData = {
   playing: boolean;
   info: PlayerInfo;
   wins: number;
-  gameState: GameState | null;
+  gameState: PublicGameState | null;
 }
 
 export type RoomData = {

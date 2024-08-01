@@ -24,7 +24,6 @@ export async function initializeSocket(
     ws.on('message', (data) => onMessage(ws, data));
 
     ws.on('close', (data) => {
-      console.log(data);
       reject("Socket closed.");
       console.log('Disconnected from the server');
     });
