@@ -1,4 +1,4 @@
-# tetris starter bot
+# botris battle starter
 
   
 
