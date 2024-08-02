@@ -1,4 +1,4 @@
-import { GameState, PublicGameState } from "../../engine";
+import { GameState, PublicGameState } from "libtris";
 
 /**
  * A function to convert from the "public game state" type to the internal game state type.

@@ -8,8 +8,7 @@ import "dotenv/config";
 import { ActionEvent, RequestMoveEvent, ServerEvent } from "../ws/types";
 import WebSocket from "ws";
 import { getPossibleMovesWithHold, PossibleMove, publicGameStateToGameState } from "./utils";
-import { getBoardHeights } from "../engine/utils";
-import { GameState } from "../engine";
+import { GameState, getBoardHeights } from "libtris";
 
 // ----- this is the main bulk of bot code, make edits here -----
 const onRequestMove = (event: RequestMoveEvent): ActionEvent => {
