@@ -27,7 +27,7 @@ NOTE: the `dev` script uses `tsx`, which runs typescript on the fly for your con
 Bot files are under `src/bot`. Export a `name` and `start` function, and add it to `src/bot/index.ts` for things to work.
 
 ## What's Provided
-- `src/engine/...` - This is engine code forked directly from the docs ([libtris](https://github.com/newclarityex/libtris)), ostensibly this is what the site is actually using to run with. Has all the SRS, attack table, etc. in it already, plus helpful utility functions to move pieces and calculate some statistics about the board.
+- ([libtris](https://github.com/newclarityex/libtris)), this is what botris battle is actually using for game logic. Has all the SRS, attack table, etc. in it already, plus helpful utility functions to move pieces and calculate some statistics about the board.
 - `src/ws/...` - Helper functions to a socket connected to the site +  some of the network types that the documentation provided.
 - `src/bot`
 	- `/utils` - A couple of helper functions I wrote to get my simple bot up and running. Most notable is probably `getPossibleMoves` which will return all possible moves + resultant game states + clear events for a provided gamestate. (It was written pretty hastily and simply, there's a ton of room for optimization here!)
