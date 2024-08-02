@@ -7,8 +7,12 @@
     "moduleDetection": "force",
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "moduleResolution": "NodeNext",
-    "lib": ["es2022", "dom", "dom.iterable"],
+    "moduleResolution": "Node",
+    "lib": [
+      "es2022",
+      "dom",
+      "dom.iterable"
+    ],
     "rootDir": "src"
   }
 }

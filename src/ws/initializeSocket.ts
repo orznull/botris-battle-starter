@@ -1,16 +1,20 @@
 import WebSocket from 'ws';
 import 'dotenv/config'
 
+/**
+ * Helper function to connect to the botris site.
+ * token / room key are 
+ */
 export async function initializeSocket(
   onMessage: (ws: WebSocket, data: WebSocket.RawData) => void,
   token: string | undefined = process.env.TOKEN,
   roomKey: string | undefined = process.env.ROOM_KEY,
 ): Promise<WebSocket> {
   if (!token) {
-    throw new Error("no token found in .env");
+    throw new Error("no token found in .env. get it from botrisbattle.com/dashboard");
   }
   if (!roomKey) {
-    throw new Error("no room found in .env");
+    throw new Error("no room key found. enter it properly or add it to .env.");
   }
   return new Promise((resolve, reject) => {
     const url = `wss://botrisbattle.com/ws?token=${token}&roomKey=${roomKey}`;

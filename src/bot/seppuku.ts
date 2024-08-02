@@ -1,22 +1,21 @@
-/* sample bot file, kills itself as fast as possible */
+/*
+
+sample bot that kills itself as fast as possible
+
+*/
 import { initializeSocket } from "../ws/initializeSocket";
 import "dotenv/config";
-import { ActionEvent, Command, RequestMoveEvent, ServerEvent } from "../ws/types";
+import { ActionEvent, RequestMoveEvent, ServerEvent } from "../ws/types";
 import WebSocket from "ws";
-import { getPossibleMoves, PossibleMove, publicGameStateToGameState } from "./utils";
+import { getPossibleMovesWithHold, PossibleMove, publicGameStateToGameState } from "./utils";
 import { getBoardHeights } from "../engine/utils";
-import { executeCommand, GameState } from "../engine";
+import { GameState } from "../engine";
 
 // ----- this is the main bulk of bot code, make edits here -----
-export const onRequestMove = (event: RequestMoveEvent): ActionEvent => {
+const onRequestMove = (event: RequestMoveEvent): ActionEvent => {
 
   const state = publicGameStateToGameState(event.payload.gameState);
-  const stateWithHold = executeCommand(state, "hold").gameState
-
-  let moves = [
-    ...getPossibleMoves(state),
-    ...getPossibleMoves(stateWithHold).map(e => ({ ...e, commands: ["hold", ...e.commands] satisfies Command[] }))
-  ];
+  const moves = getPossibleMovesWithHold(state);
 
   const bestMove = moves.reduce<PossibleMove | undefined>((best, current) => {
     if (!best) return current;
@@ -49,4 +48,8 @@ const onMessage = (ws: WebSocket, data: WebSocket.RawData) => {
   const reply = getReply(event);
   if (reply) ws.send(JSON.stringify(reply));
 }
-initializeSocket(onMessage);
+
+export const SEPPUKU = {
+  name: "seppuku",
+  start: () => initializeSocket(onMessage)
+}

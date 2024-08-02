@@ -167,6 +167,7 @@ export type GameEvent = {
     };
 } | {
     type: 'game_over';
+    payload: undefined;
 }
 export function executeCommand(gameState: GameState, command: Command, options: Partial<Options> = {}): {
     gameState: GameState;

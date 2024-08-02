@@ -12,6 +12,17 @@ const NON_HD_COMMANDS: Command[] = [
   //'hold',
 ]
 
+// excluding hold, hd
+const NON_HD_COMMANDS_NO_SD_TUCK: Command[] = [
+  'move_left',
+  'move_right',
+  'rotate_cw',
+  'rotate_ccw',
+  'sonic_drop',
+  //'hold',
+]
+
+
 export type PossibleMove = {
   commands: Command[],
   /**
@@ -24,27 +35,45 @@ export type PossibleMove = {
   events: GameEvent[],
 }
 
-const MAX_MOVE_SEARCH_DEPTH = 20; // TOTALLY ARBITRARY
+export function getPossibleMovesWithHold(state: GameState, allowSoftDropTuck: boolean = false) {
+  const stateWithHold = executeCommand(state, "hold").gameState
+
+  return [
+    ...getPossibleMoves(state, allowSoftDropTuck),
+    ...getPossibleMoves(stateWithHold, allowSoftDropTuck).map(e => ({ ...e, commands: ["hold", ...e.commands] satisfies Command[] }))
+  ];
+}
+
+const MAX_MOVE_SEARCH_DEPTH = 20; // The maximum number of inputs we'll attempt to explore (TOTALLY ARBITRARY)
 /**
  * A function to BFS the different possible moves for the current piece, disregarding hold.
+ * Should guarentee we are reaching each position in as few moves as possible!
+ * https://en.wikipedia.org/wiki/Breadth-first_search
  * XXX: Optimize me! This is definitely not the fastest or most memory efficient way to write this!
  */
 export function getPossibleMoves(
   state: GameState, // state
+  allowSoftDropTuck: boolean = false
 ): PossibleMove[] {
-  const exploredPiecePositions: Set<string> = new Set(); // set to dedupe piece positions
-  const arrivedAtBoards: Set<string> = new Set(); // set to dedupe boards
+  // set to dedupe piece positions. if we've arrived at a piece position before, we skip exploring it again.
+  const exploredPiecePositions: Set<string> = new Set();
+
+  // set to dedupe boards. if hard dropping at the current game state has already been accounted for, don't record the current movelist as a separate list.
+  const arrivedAtBoards: Set<string> = new Set();
   const BFSQueue: PossibleMove[] = [{ gameState: state, commands: [], events: [] }];
   const possibleMoves: PossibleMove[] = [];
 
   while (BFSQueue.length > 0) {
+
+    // pop the current moves off the queue
     const currentlyExploring = BFSQueue.shift();
     if (!currentlyExploring) break;
     const { gameState: currentState, commands: currentCommands } = currentlyExploring;
 
-    const pos = encodePiecePos(currentState.current)
 
-    // dedupe by piece location, to avoid wasting time moving back and forth
+
+    // if we've already seen this piece position, skip exploring
+    const pos = encodePiecePos(currentState.current)
     if (exploredPiecePositions.has(pos)) continue;
     exploredPiecePositions.add(pos);
 
@@ -62,7 +91,7 @@ export function getPossibleMoves(
 
     // if we're under the max depth, perform another command and add to queue new possible moves.
     if (currentCommands.length <= MAX_MOVE_SEARCH_DEPTH)
-      for (const command of NON_HD_COMMANDS) {
+      for (const command of (allowSoftDropTuck ? NON_HD_COMMANDS : NON_HD_COMMANDS_NO_SD_TUCK)) {
         const { gameState: newState, events } = executeCommand(currentState, command);
         BFSQueue.push({
           gameState: newState,
@@ -121,10 +150,16 @@ export function getPossibleMovesDFS(
   return possibleMoves
 }
 
+/**
+ * Helper function to encode piece position data for deduping.
+ */
 function encodePiecePos(pieceData: PieceData): string {
   return `r${pieceData.rotation}x${pieceData.x}y${pieceData.y}`;
 }
 
+/**
+ * Helper function to encode a board for deduping
+ */
 function encodeBoard(board: Block[][]): string {
   return board.map(row => row.map(cell => cell === null ? "n" : cell).join("")).join("\n");
 }
