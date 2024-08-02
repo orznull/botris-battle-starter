@@ -1,5 +1,4 @@
-import { executeCommand, GameEvent, GameState, hardDrop, PieceData } from "../../engine";
-import { Block } from "../../engine/utils";
+import { executeCommand, GameEvent, GameState, hardDrop, PieceData, Block } from "libtris";
 import { Command } from "../../ws/types";
 
 // excluding hold, hd
